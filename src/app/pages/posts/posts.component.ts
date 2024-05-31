@@ -1,6 +1,7 @@
 import { AsyncPipe, DecimalPipe } from '@angular/common';
 import { Component, QueryList, ViewChildren } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { NgbHighlight, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { SortableHeader, SortEvent } from '../../directives/sortable.directive';
@@ -11,6 +12,7 @@ import { PostService } from '../../services/post.service';
   selector: 'app-posts',
   standalone: true,
   imports: [
+    RouterLink,
     DecimalPipe,
     FormsModule,
     AsyncPipe,

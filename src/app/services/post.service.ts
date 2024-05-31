@@ -82,6 +82,10 @@ export class PostService {
     this._search$.next();
   }
 
+  findById(id: number) {
+    return POSTS.find((post) => post.id === id)
+  }
+
   get posts$() {
     return this._posts$.asObservable();
   }
