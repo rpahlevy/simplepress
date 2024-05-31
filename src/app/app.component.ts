@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 
 import { IconsModule } from './modules/icons/icons.module';
@@ -14,5 +15,10 @@ import { IconsModule } from './modules/icons/icons.module';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'simplepress';
+  // title = 'simplepress';
+  title: Title;
+
+  constructor(title: Title) {
+    this.title = title;
+  }
 }
