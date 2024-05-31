@@ -2,7 +2,7 @@
   <div class="row vh-sm-100 overflow-auto">
     <div class="col-12 col-sm-3 col-xl-2 px-sm-2 px-0 bg-light sticky-top">
       <div class="d-flex flex-sm-column flex-row flex-grow-1 align-items-center align-items-sm-start px-3 py-2">
-        <a href="/" class="d-flex align-items-center pb-sm-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+        <a [routerLink]="['/']" class="d-flex align-items-center pb-sm-3 mb-md-0 me-md-auto link-dark text-decoration-none">
           <span class="fs-5 my-3">
             <span class="d-sm-none">
               SP
@@ -14,7 +14,7 @@
         </a>
         <ul class="nav nav-pills flex-sm-column flex-row flex-nowrap flex-shrink-1 flex-sm-grow-0 flex-grow-1 mb-sm-auto mb-0 justify-content-center align-items-center align-items-sm-start">
           <li class="nav-item">
-            <a href="#" class="nav-link px-2 mx-1 mx-sm-0 active" aria-current="page">
+            <a [routerLink]="['/']" class="nav-link px-2 mx-1 mx-sm-0 active" aria-current="page">
               <bi name="speedometer2" class=""></bi>
               <span class="ms-1 d-none d-sm-inline">
                 Dashboard
@@ -22,7 +22,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link px-2 mx-1 mx-sm-0 link-dark">
+            <a [routerLink]="['posts']" class="nav-link px-2 mx-1 mx-sm-0 link-dark">
               <bi name="newspaper" class=""></bi>
               <span class="ms-1 d-none d-sm-inline">
                 Posts
@@ -30,7 +30,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link px-2 mx-1 mx-sm-0 link-dark">
+            <a [routerLink]="['albums']" class="nav-link px-2 mx-1 mx-sm-0 link-dark">
               <bi name="journal-album" class=""></bi>
               <span class="ms-1 d-none d-sm-inline">
                 Albums
@@ -38,7 +38,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link px-2 mx-1 mx-sm-0 link-dark">
+            <a [routerLink]="['photos']" class="nav-link px-2 mx-1 mx-sm-0 link-dark">
               <bi name="file-image" class=""></bi>
               <span class="ms-1 d-none d-sm-inline">
                 Photos
@@ -50,7 +50,7 @@
     </div>
     <div class="col d-flex flex-column h-sm-100">
       <section class="px-1 mx-n3">
-        <!-- <app-posts></app-posts> -->
+        <router-outlet></router-outlet>
       </section>
     </div>
   </div>
