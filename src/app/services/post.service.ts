@@ -44,7 +44,7 @@ function sort(posts: Post[], column: SortColumn, direction: string): Post[] {
 function matches(post: Post, term: string, pipe: PipeTransform) {
   return (
     post.title.toLowerCase().includes(term.toLowerCase()) ||
-    pipe.transform(post.body).includes(term)
+    post.body.toLowerCase().includes(term.toLowerCase())
   );
 }
 
@@ -59,7 +59,7 @@ export class PostService {
 
   private _state: State = {
     page: 1,
-    pageSize: 4,
+    pageSize: 5,
     searchTerm: '',
     sortColumn: '',
     sortDirection: '',
@@ -85,13 +85,13 @@ export class PostService {
   get posts$() {
     return this._posts$.asObservable();
   }
-  get totals$() {
+  get total$() {
     return this._total$.asObservable();
   }
   get loading$() {
     return this._loading$.asObservable();
   }
-  get page$() {
+  get page() {
     return this._state.page;
   }
   get pageSize() {
@@ -118,6 +118,8 @@ export class PostService {
   }
 
   private _set(patch: Partial<State>) {
+    console.log(this._state.page)
+    console.log(patch)
     Object.assign(this._state, patch);
     this._search$.next();
   }

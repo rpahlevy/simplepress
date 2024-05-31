@@ -9,7 +9,7 @@ const rotate: { [key: string]: SortDirection } = {
   '': 'asc',
 };
 
-export interface SortEvent {
+export interface SortEvent extends Event {
   column: SortColumn;
   direction: SortDirection;
 }
@@ -23,14 +23,14 @@ export interface SortEvent {
     '(click)': 'rotate()',
   },
 })
-export class SortableDirective {
+export class SortableHeader {
   @Input() sortable: SortColumn = '';
 	@Input() direction: SortDirection = '';
 	@Output() sort = new EventEmitter<SortEvent>();
 
 	rotate() {
 		this.direction = rotate[this.direction];
-		this.sort.emit({ column: this.sortable, direction: this.direction });
+		this.sort.emit({ column: this.sortable, direction: this.direction } as SortEvent);
 	}
 
   constructor() {}
