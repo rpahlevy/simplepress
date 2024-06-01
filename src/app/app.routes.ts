@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { AlbumDetailsComponent } from './pages/album-details/album-details.component';
 import { AlbumsComponent } from './pages/albums/albums.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { PhotosComponent } from './pages/photos/photos.component';
@@ -19,13 +20,20 @@ export const routes: Routes = [
   {
     path: 'posts/:id',
     component: PostDetailsComponent,
-    // title: 
   },
   {
     path: 'albums',
     component: AlbumsComponent,
     title: 'Albums',
   },
+  {
+    path: 'albums/:id',
+    component: AlbumDetailsComponent,
+  },
+  // {
+  //   path: 'albums/:id/photos',
+  //   component: AlbumPhotosComponent,
+  // },
   {
     path: 'photos',
     component: PhotosComponent,

@@ -1,1 +1,90 @@
-<p>albums works!</p>
+<div class="px-4 px-md-5 mb-4">
+    <form>
+      <div class="mb-3 row">
+        <!-- <label
+          for="table-complete-search"
+          class="col-xs-3 col-sm-auto col-form-label"
+          >Full text search:</label
+        > -->
+        <div class="col-xs-3 col-sm-auto">
+          <input
+            id="table-complete-search"
+            type="text"
+            class="form-control mb-2 mb-sm-0"
+            name="searchTerm"
+            placeholder="Search"
+            [ngModel]="service.searchTerm"
+            (ngModelChange)="onSearchTermChange($event)" />
+        </div>
+        <div class="col-xs-3 col-sm-auto">
+          <select
+            class="form-select mb-2 mb-sm-0"
+            style="width: auto"
+            name="pageSize"
+            [(ngModel)]="service.pageSize">
+            <option [ngValue]="5">5 items per page</option>
+            <option [ngValue]="10">10 items per page</option>
+            <option [ngValue]="50">50 items per page</option>
+          </select>
+        </div>
+        @if (service.loading$ | async) {
+          <span class="col col-form-label">Loading...</span>
+        } @else if (filtersApplied) {
+          <div class="col-xs-3 col-sm-auto">
+            <button class="btn btn-light" (click)="onClearFilters()">
+              <span class="me-1">&times;</span>
+              Clear
+            </button>
+          </div>
+        }
+      </div>
+  
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col" sortable="userId" (sort)="onSort($event)">User</th>
+            <th scope="col" sortable="title" (sort)="onSort($event)">Title</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (album of albums$ | async; track album.id; let i = $index) {
+            <tr>
+              <th scope="row">{{ i + 1 + ((service.page - 1) * service.pageSize) }}</th>
+              <td>
+                <ngb-highlight
+                  [result]="'User ' + album.userId"
+                  [term]="service.searchTerm" />
+              </td>
+              <td>
+                <a [routerLink]="[album.id]" class="text-decoration-none">
+                  <ngb-highlight
+                    [result]="album.title"
+                    [term]="service.searchTerm" />
+                </a>
+              </td>
+            </tr>
+          } @empty {
+            @if (service.loading$ | async) {
+              <tr>
+                <td colspan="4" style="text-align: center">Loading...</td>
+              </tr>
+            } @else {
+              <tr>
+                <td colspan="4" style="text-align: center">No album found</td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+  
+      <div class="d-flex justify-content-between p-2">
+        <ngb-pagination
+          [collectionSize]="(total$ | async)!"
+          [(page)]="service.page"
+          [pageSize]="service.pageSize">
+        </ngb-pagination>
+      </div>
+    </form>
+  </div>
+  
