@@ -12,6 +12,7 @@ import {
 } from 'rxjs';
 import { SortColumn, SortDirection } from '../directives/sortable-album.directive';
 import { Album } from '../interfaces/album';
+import { Photo } from '../interfaces/photo';
 
 interface SearchResult {
   albums: Album[];
@@ -93,9 +94,9 @@ export class AlbumService {
     const data = await fetch(`${this._url}/${id}`);
     return (await data.json()) ?? {};
   }
-  async getPhotos(id: number): Promise<Album | undefined> {
+  async getPhotos(id: number): Promise<Photo[]> {
     const data = await fetch(`${this._url}/${id}/photos`);
-    return (await data.json()) ?? {};
+    return (await data.json()) ?? [];
   }
 
   get albums$() {

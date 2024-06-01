@@ -69,7 +69,13 @@
                   <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a [routerLink]="['/']">Dashboard</a></li>
                     @if (path.indexOf('/') >= 0) {
-                      <li class="breadcrumb-item"><a [routerLink]="['/posts']">Posts</a></li>
+                      <li class="breadcrumb-item">
+                        @if (path.indexOf('posts') >= 0) {
+                          <a [routerLink]="['/posts']">Posts</a>
+                        } @else {
+                          <a [routerLink]="['/albums']">Albums</a>
+                        }
+                      </li>
                       <li class="breadcrumb-item active">{{ title.getTitle() }}</li>
                     } @else {
                       <li class="breadcrumb-item active">{{ title.getTitle() }}</li>

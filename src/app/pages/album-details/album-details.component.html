@@ -1,1 +1,7 @@
-<p>album-details works!</p>
+<div class="px-4 px-md-5 mb-4 fs-5">
+  @if (loading) {
+    Loading...
+  } @else {
+    {{ album?.title }}
+  }
+</div>
