@@ -88,6 +88,7 @@ export class PostsComponent {
     this.service.searchTerm = '';
     this.service.sortColumn = '';
     this.service.sortDirection = '';
+    this.service.page = 1;
     this.filtersApplied = false;
 
     this.router.navigate([], {

@@ -17,16 +17,20 @@ export class PostDetailsComponent {
   route: ActivatedRoute = inject(ActivatedRoute);
   postId: number;
   post: Post | undefined;
+  loading = false;
 
   constructor(
     public postService: PostService,
     public title: Title
   ) {
+    this.loading = true;
     this.postId = Number(this.route.snapshot.params['id']);
-    this.post = this.postService.findById(this.postId);
-    if (this.post) {
-      title.setTitle(this.post.title);
-    }
-    console.log(this.post);
+    this.postService.findById(this.postId).then(post => {
+      this.loading = false;
+      this.post = post;
+      if (post) {
+        title.setTitle(post.title);
+      }
+    });
   }
 }

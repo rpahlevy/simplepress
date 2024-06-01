@@ -51,7 +51,7 @@
       <tbody>
         @for (post of posts$ | async; track post.id; let i = $index) {
           <tr>
-            <th scope="row">{{ i + 1 }}</th>
+            <th scope="row">{{ i + 1 + ((service.page - 1) * service.pageSize) }}</th>
             <td>
               <ngb-highlight
                 [result]="'User ' + post.userId"
@@ -69,9 +69,15 @@
             </td>
           </tr>
         } @empty {
-          <tr>
-            <td colspan="4" style="text-align: center">No post found</td>
-          </tr>
+          @if (service.loading$ | async) {
+            <tr>
+              <td colspan="4" style="text-align: center">Loading...</td>
+            </tr>
+          } @else {
+            <tr>
+              <td colspan="4" style="text-align: center">No post found</td>
+            </tr>
+          }
         }
       </tbody>
     </table>

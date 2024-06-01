@@ -12,7 +12,7 @@ import {
 } from 'rxjs';
 import { SortColumn, SortDirection } from '../directives/sortable.directive';
 import { Post } from '../interfaces/post';
-import { POSTS } from '../interfaces/posts';
+// import { POSTS } from '../interfaces/posts';
 
 interface SearchResult {
   posts: Post[];
@@ -52,6 +52,9 @@ function matches(post: Post, term: string, pipe: PipeTransform) {
   providedIn: 'root',
 })
 export class PostService {
+  private _url = 'https://jsonplaceholder.typicode.com/posts';
+  private _POSTS: Post[];
+
   private _loading$ = new BehaviorSubject<boolean>(true);
   private _search$ = new Subject<void>();
   private _posts$ = new BehaviorSubject<Post[]>([]);
@@ -69,24 +72,30 @@ export class PostService {
   pageSub$ = this._pageInstance.asObservable();
 
   constructor(private pipe: DecimalPipe) {
-    this._search$
-      .pipe(
-        tap(() => this._loading$.next(true)),
-        debounceTime(200),
-        switchMap(() => this._search()),
-        delay(200),
-        tap(() => this._loading$.next(false))
-      )
-      .subscribe(result => {
-        this._posts$.next(result.posts);
-        this._total$.next(result.total);
-      });
+    this._POSTS = [];
 
-    this._search$.next();
+    this._getPosts().then(posts => {
+      this._POSTS = posts;
+      this._search$
+        .pipe(
+          tap(() => this._loading$.next(true)),
+          debounceTime(200),
+          switchMap(() => this._search()),
+          delay(200),
+          tap(() => this._loading$.next(false))
+        )
+        .subscribe(result => {
+          this._posts$.next(result.posts);
+          this._total$.next(result.total);
+        });
+
+      this._search$.next();
+    });
   }
 
-  findById(id: number) {
-    return POSTS.find(post => post.id === id);
+  async findById(id: number): Promise<Post | undefined>{
+    const data = await fetch(`${this._url}/${id}`);
+    return (await data.json()) ?? {};
   }
 
   get posts$() {
@@ -127,7 +136,15 @@ export class PostService {
 
   private _set(patch: Partial<State>) {
     Object.assign(this._state, patch);
-    this._search$.next();
+    this._getPosts().then(posts => {
+      this._POSTS = posts;
+      this._search$.next();
+    });
+  }
+
+  private async _getPosts(): Promise<Post[]> {
+    const data = await fetch(this._url);
+    return (await data.json()) ?? [];
   }
 
   private _search(): Observable<SearchResult> {
@@ -135,7 +152,7 @@ export class PostService {
       this._state;
 
     // 1. sort
-    let posts = sort(POSTS, sortColumn, sortDirection);
+    let posts = sort(this._POSTS, sortColumn, sortDirection);
 
     // 2. filter
     posts = posts.filter(post => matches(post, searchTerm, this.pipe));
