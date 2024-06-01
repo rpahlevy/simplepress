@@ -82,6 +82,8 @@
         <ngb-pagination
           [collectionSize]="(total$ | async)!"
           [(page)]="service.page"
+          [maxSize]="5"
+          [boundaryLinks]="true"
           [pageSize]="service.pageSize">
         </ngb-pagination>
       </div>
