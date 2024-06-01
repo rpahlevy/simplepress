@@ -65,6 +65,9 @@ export class PostService {
     sortDirection: '',
   };
 
+  private _pageInstance = new Subject<any>();
+  pageSub$ = this._pageInstance.asObservable();
+
   constructor(private pipe: DecimalPipe) {
     this._search$
       .pipe(
@@ -83,7 +86,7 @@ export class PostService {
   }
 
   findById(id: number) {
-    return POSTS.find((post) => post.id === id)
+    return POSTS.find(post => post.id === id);
   }
 
   get posts$() {
@@ -106,6 +109,7 @@ export class PostService {
   }
 
   set page(page: number) {
+    this._pageInstance.next(page);
     this._set({ page });
   }
   set pageSize(pageSize: number) {
@@ -122,8 +126,6 @@ export class PostService {
   }
 
   private _set(patch: Partial<State>) {
-    console.log(this._state.page)
-    console.log(patch)
     Object.assign(this._state, patch);
     this._search$.next();
   }
