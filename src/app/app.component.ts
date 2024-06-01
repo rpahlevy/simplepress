@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, Event, NavigationEnd, Router, RouterModule } from '@angular/router';
 
 import { IconsModule } from './modules/icons/icons.module';
 
@@ -17,8 +17,16 @@ import { IconsModule } from './modules/icons/icons.module';
 export class AppComponent {
   // title = 'simplepress';
   title: Title;
+  path: string = '';
 
-  constructor(title: Title) {
+  constructor(title: Title, router: Router) {
     this.title = title;
+
+    router.events.subscribe((event: Event) => {
+      if (event instanceof NavigationEnd) {
+        const url = (<NavigationEnd>event).url
+        this.path = url.slice(1)
+      }
+    })
   }
 }
