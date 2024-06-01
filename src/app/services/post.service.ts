@@ -10,7 +10,7 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { SortColumn, SortDirection } from '../directives/sortable.directive';
+import { SortColumn, SortDirection } from '../directives/sortablePost.directive';
 import { Post } from '../interfaces/post';
 // import { POSTS } from '../interfaces/posts';
 
@@ -79,9 +79,9 @@ export class PostService {
       this._search$
         .pipe(
           tap(() => this._loading$.next(true)),
-          debounceTime(200),
+          // debounceTime(200),
           switchMap(() => this._search()),
-          delay(200),
+          // delay(200),
           tap(() => this._loading$.next(false))
         )
         .subscribe(result => {
@@ -93,7 +93,7 @@ export class PostService {
     });
   }
 
-  async findById(id: number): Promise<Post | undefined>{
+  async findById(id: number): Promise<Post | undefined> {
     const data = await fetch(`${this._url}/${id}`);
     return (await data.json()) ?? {};
   }

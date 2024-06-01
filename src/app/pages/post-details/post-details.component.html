@@ -1,5 +1,7 @@
 <div class="px-4 px-md-5 mb-4 fs-5">
-  @if (!loading) {
+  @if (loading) {
+    Loading...
+  } @else {
     {{ post?.body }}
   }
 </div>

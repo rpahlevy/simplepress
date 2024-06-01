@@ -26,11 +26,11 @@ export class PostDetailsComponent {
     this.loading = true;
     this.postId = Number(this.route.snapshot.params['id']);
     this.postService.findById(this.postId).then(post => {
-      this.loading = false;
       this.post = post;
       if (post) {
         title.setTitle(post.title);
       }
+      this.loading = false;
     });
   }
 }

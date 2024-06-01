@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
 import { NgbHighlight, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
-import { SortableHeader, SortEvent } from '../../directives/sortable.directive';
+import { SortableHeader, SortEvent } from '../../directives/sortablePost.directive';
 import { Post } from '../../interfaces/post';
 import { PostService } from '../../services/post.service';
 

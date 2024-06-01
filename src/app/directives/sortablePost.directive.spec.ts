@@ -1,4 +1,4 @@
-import { SortableHeader } from './sortable.directive';
+import { SortableHeader } from './sortablePost.directive';
 
 describe('SortableDirective', () => {
   it('should create an instance', () => {
