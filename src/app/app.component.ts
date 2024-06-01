@@ -1,3 +1,4 @@
+import { DecimalPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Event, NavigationEnd, Router, RouterModule } from '@angular/router';
@@ -12,7 +13,8 @@ import { IconsModule } from './modules/icons/icons.module';
     IconsModule,
   ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
+  providers: [DecimalPipe],
 })
 export class AppComponent {
   // title = 'simplepress';

@@ -10,16 +10,16 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { SortColumn, SortDirection } from '../directives/sortable-album.directive';
-import { Album } from '../interfaces/album';
+import { SortColumn, SortDirection } from '../directives/sortable-photo.directive';
 import { Photo } from '../interfaces/photo';
 
 interface SearchResult {
-  albums: Album[];
+  photos: Photo[];
   total: number;
 }
 
 interface State {
+  albumId: number;
   page: number;
   pageSize: number;
   searchTerm: string;
@@ -30,34 +30,36 @@ interface State {
 const compare = (v1: string | number, v2: string | number) =>
   v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
 
-function sort(albums: Album[], column: SortColumn, direction: string): Album[] {
+function sort(photos: Photo[], column: SortColumn, direction: string): Photo[] {
   if (direction === '' || column === '') {
-    return albums;
+    return photos;
   } else {
-    return [...albums].sort((a, b) => {
+    return [...photos].sort((a, b) => {
       const res = compare(a[column], b[column]);
       return direction === 'asc' ? res : -res;
     });
   }
 }
 
-function matches(album: Album, term: string, pipe: PipeTransform) {
-  return album.title.toLowerCase().includes(term.toLowerCase());
+function matches(photo: Photo, term: string, pipe: PipeTransform) {
+  return photo.title.toLowerCase().includes(term.toLowerCase());
 }
 
 @Injectable({
   providedIn: 'root',
 })
-export class AlbumService {
-  private _url = 'https://jsonplaceholder.typicode.com/albums';
-  private _ALBUMS: Album[];
+export class PhotoService {
+  private _url = 'https://jsonplaceholder.typicode.com/photos';
+  private _urlAlbum = 'https://jsonplaceholder.typicode.com/album';
+  private _PHOTOS: Photo[];
 
   private _loading$ = new BehaviorSubject<boolean>(true);
   private _search$ = new Subject<void>();
-  private _albums$ = new BehaviorSubject<Album[]>([]);
+  private _photos$ = new BehaviorSubject<Photo[]>([]);
   private _total$ = new BehaviorSubject<number>(0);
 
   private _state: State = {
+    albumId: 0,
     page: 1,
     pageSize: 10,
     searchTerm: '',
@@ -69,10 +71,10 @@ export class AlbumService {
   pageSub$ = this._pageInstance.asObservable();
 
   constructor(private pipe: DecimalPipe) {
-    this._ALBUMS = [];
+    this._PHOTOS = [];
 
-    this._getAlbums().then(albums => {
-      this._ALBUMS = albums;
+    this._getPhotos().then(photos => {
+      this._PHOTOS = photos;
       this._search$
         .pipe(
           tap(() => this._loading$.next(true)),
@@ -82,7 +84,7 @@ export class AlbumService {
           tap(() => this._loading$.next(false))
         )
         .subscribe(result => {
-          this._albums$.next(result.albums);
+          this._photos$.next(result.photos);
           this._total$.next(result.total);
         });
 
@@ -90,23 +92,22 @@ export class AlbumService {
     });
   }
 
-  async findById(id: number): Promise<Album | undefined> {
+  async findById(id: number): Promise<Photo | undefined> {
     const data = await fetch(`${this._url}/${id}`);
     return (await data.json()) ?? {};
   }
-  async getPhotos(id: number): Promise<Photo[]> {
-    const data = await fetch(`${this._url}/${id}/photos`);
-    return (await data.json()) ?? [];
-  }
 
-  get albums$() {
-    return this._albums$.asObservable();
+  get photos$() {
+    return this._photos$.asObservable();
   }
   get total$() {
     return this._total$.asObservable();
   }
   get loading$() {
     return this._loading$.asObservable();
+  }
+  get albumId() {
+    return this._state.albumId;
   }
   get page() {
     return this._state.page;
@@ -118,6 +119,9 @@ export class AlbumService {
     return this._state.searchTerm;
   }
 
+  set albumId(albumId: number) {
+    this._set({ albumId });
+  }
   set page(page: number) {
     this._pageInstance.next(page);
     this._set({ page });
@@ -137,14 +141,17 @@ export class AlbumService {
 
   private _set(patch: Partial<State>) {
     Object.assign(this._state, patch);
-    this._getAlbums().then(albums => {
-      this._ALBUMS = albums;
+    this._getPhotos().then(photos => {
+      this._PHOTOS = photos;
       this._search$.next();
     });
   }
 
-  private async _getAlbums(): Promise<Album[]> {
-    const data = await fetch(this._url);
+  private async _getPhotos(): Promise<Photo[]> {
+    const url = this._state.albumId > 0 ?
+      `${this._urlAlbum}/${this._state.albumId}/photos` :
+      this._url
+    const data = await fetch(url);
     return (await data.json()) ?? [];
   }
 
@@ -153,17 +160,17 @@ export class AlbumService {
       this._state;
 
     // 1. sort
-    let albums = sort(this._ALBUMS, sortColumn, sortDirection);
+    let photos = sort(this._PHOTOS, sortColumn, sortDirection);
 
     // 2. filter
-    albums = albums.filter(post => matches(post, searchTerm, this.pipe));
-    const total = albums.length;
+    photos = photos.filter(post => matches(post, searchTerm, this.pipe));
+    const total = photos.length;
 
     // 3. paginate
-    albums = albums.slice(
+    photos = photos.slice(
       (page - 1) * pageSize,
       (page - 1) * pageSize + pageSize
     );
-    return of({ albums, total });
+    return of({ photos, total });
   }
 }
